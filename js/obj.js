@@ -1,4 +1,8 @@
 // Minimal Wavefront OBJ parser: only reads vertex positions (v) and faces (f).
+// OBJ coordinates are right-handed, but the renderer is left-handed (x right,
+// y up, z forward), so z is flipped to keep the model from showing mirrored.
+// Flipping also reverses the winding, so each face's vertex order is reversed
+// to keep faces counter-clockwise seen from the front.
 function parseObj(text) {
     const vertices = []
     const faces = []
@@ -10,7 +14,7 @@ function parseObj(text) {
             vertices.push({
                 x: parseFloat(parts[1]),
                 y: parseFloat(parts[2]),
-                z: parseFloat(parts[3]),
+                z: -parseFloat(parts[3]),
             })
         } else if (parts[0] === "f") {
             // Each entry is v, v/vt, v//vn or v/vt/vn. OBJ indices start at 1,
@@ -19,7 +23,7 @@ function parseObj(text) {
                 const i = parseInt(entry.split("/")[0])
                 return i > 0 ? i - 1 : vertices.length + i
             })
-            faces.push(face)
+            faces.push(face.reverse())
         }
     }
 
