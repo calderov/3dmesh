@@ -25,7 +25,8 @@
         <script src="js/obj.js"></script>
         <script src="js/render.js"></script>
         <script>
-            loadObj("assets/pig.obj").then(({vertices, faces}) => render(vertices, faces))
+            const model = "assets/pig.obj"
+            loadObj(model).then(({vertices, faces}) => render(vertices, faces))
         </script>
     </body>
 </html>

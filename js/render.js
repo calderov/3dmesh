@@ -6,11 +6,13 @@ const ctx = game.getContext("2d")
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+// Clear the screen
 function clear() {
     ctx.fillStyle = BACKGROUND
     ctx.fillRect(0, 0, game.width, game.height)
 }
 
+// Draw a line on screen
 function drawLine(p1, p2) {
     ctx.lineWidth = 1;
     ctx.strokeStyle = FOREGROUND
@@ -20,12 +22,14 @@ function drawLine(p1, p2) {
     ctx.stroke();
 }
 
+// Draw a point on screen
 function drawPoint(p) {
     const s = 4
     ctx.fillStyle = FOREGROUND
     ctx.fillRect(p.x, p.y, s/2, s/2)
 }
 
+// Transform a point p into screen coordinates
 function screen(p) {
     return {
         x: (p.x + 1)/2 * game.width,
@@ -33,6 +37,7 @@ function screen(p) {
     }
 }
 
+// Project a point p into the x,y plane
 function project(p) {
     return {
         x: p.x/p.z,
@@ -40,10 +45,12 @@ function project(p) {
     }
 }
 
+// Draw a 3d point on screen
 function paintVertex(p) {
     drawPoint(screen(project(p)))
 }
 
+// Draw a 3d face on screen
 function paintFace(f, vertices) {
     for (let i = 0; i < f.length - 1; i++) {
         const p1 = vertices[f[i]]
@@ -57,6 +64,7 @@ function paintFace(f, vertices) {
     }
 }
 
+// Translate point by dz
 function translate(p, dz) {
     return {
         x: p.x,
@@ -65,6 +73,7 @@ function translate(p, dz) {
     }
 }
 
+// Rotate point by angle with respect of the origin
 function rotate_xz(p, angle) {
     return {
         x: p.x * Math.cos(angle) - p.z * Math.sin(angle),
@@ -73,6 +82,7 @@ function rotate_xz(p, angle) {
     };
 }
 
+// Renders mesh represented by vertices and faces
 async function render(vertices, faces) {
     const dt = 1/FPS
     let dz = 4
