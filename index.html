@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <style>
+            body {
+                background-color: black;
+            }
+            .center {
+                width: 960px;
+                height: 1080px;
+                margin-top: 50px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            #game {
+                background-color: #151515;
+                border: #151515;
+                border-style: solid;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="center">
+            <canvas id="game" width="960" height="1080"></canvas>
+        </div>
+        <script src="js/obj.js"></script>
+        <script src="js/render.js"></script>
+        <script>
+            loadObj("assets/pig.obj").then(({vertices, faces}) => render(vertices, faces))
+        </script>
+    </body>
+</html>
