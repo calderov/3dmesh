@@ -6,10 +6,24 @@ const ctx = game.getContext("2d")
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+function resizeCanvas() {
+    const pixelRatio = window.devicePixelRatio || 1
+    const width = game.clientWidth
+    const height = game.clientHeight
+
+    game.width = Math.round(width * pixelRatio)
+    game.height = Math.round(height * pixelRatio)
+    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
+    clear()
+}
+
+window.addEventListener("resize", resizeCanvas)
+resizeCanvas()
+
 // Clear the screen
 function clear() {
     ctx.fillStyle = BACKGROUND
-    ctx.fillRect(0, 0, game.width, game.height)
+    ctx.fillRect(0, 0, game.clientWidth, game.clientHeight)
 }
 
 // Draw a line on screen
@@ -31,9 +45,10 @@ function drawPoint(p) {
 
 // Transform a point p into screen coordinates
 function screen(p) {
+    const scale = Math.min(game.clientWidth, game.clientHeight) / 2
     return {
-        x: (p.x + 1)/2 * game.width,
-        y: (1 - (p.y + 1)/2) * game.height,
+        x: game.clientWidth / 2 + p.x * scale,
+        y: game.clientHeight / 2 - p.y * scale,
     }
 }
 
@@ -110,4 +125,3 @@ async function render(vertices, faces) {
         clear()
     }
 }
-
