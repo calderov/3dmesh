@@ -1,6 +1,7 @@
 const FOREGROUND = "#FF0000"
 const BACKGROUND = "#000000"
 const FPS = 60
+const NEAR = 0.1 // Distance from the camera to the near clipping plane
 
 const ctx = game.getContext("2d")
 
@@ -65,17 +66,40 @@ function paintVertex(p) {
     drawPoint(screen(project(p)))
 }
 
+// Draw a 3d edge on screen, clipped against the near plane z = NEAR.
+// Points at or behind the camera can't be projected, so the part of the
+// edge in front of the near plane is kept and the rest is cut off.
+function paintEdge(p1, p2) {
+    if (p1.z < NEAR && p2.z < NEAR) {
+        return
+    }
+    if (p1.z < NEAR || p2.z < NEAR) {
+        const t = (NEAR - p1.z) / (p2.z - p1.z)
+        const clipped = {
+            x: p1.x + (p2.x - p1.x) * t,
+            y: p1.y + (p2.y - p1.y) * t,
+            z: NEAR,
+        }
+        if (p1.z < NEAR) {
+            p1 = clipped
+        } else {
+            p2 = clipped
+        }
+    }
+    drawLine(screen(project(p1)), screen(project(p2)))
+}
+
 // Draw a 3d face on screen
 function paintFace(f, vertices) {
     for (let i = 0; i < f.length - 1; i++) {
         const p1 = vertices[f[i]]
         const p2 = vertices[f[i + 1]]
-        drawLine(screen(project(p1)), screen(project(p2)))
+        paintEdge(p1, p2)
     }
     if (f.length > 2) {
         const p1 = vertices[f[0]]
         const p2 = vertices[f[f.length - 1]]
-        drawLine(screen(project(p1)), screen(project(p2)))
+        paintEdge(vertices[f[0]], vertices[f[f.length - 1]])
     }
 }
 
