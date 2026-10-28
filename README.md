@@ -1,6 +1,7 @@
 # 3D Mesh
 
 A small browser-based 3D wireframe demo. It parses a Wavefront OBJ mesh in JavaScript and draws its faces on an HTML canvas, rotating the model with a simple perspective projection.
+<img width="918" height="755" alt="image" src="https://github.com/user-attachments/assets/bb38b33b-555c-4cdf-9c98-eec823e851c9" />
 
 ## Run locally
 
